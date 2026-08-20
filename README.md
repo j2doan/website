@@ -81,9 +81,10 @@ Most content can be changed without touching the 3D scene.
 ## Interaction Model
 
 - Scroll or use the arrow keys to move through sections.
+- On mobile, use the `PREVIOUS` and `NEXT` buttons to move through sections.
 - Use number keys to jump to sections in registry order.
 - Select a project orb or project-list entry to open its detail view.
-- Use the `MAIN MENU` button or `Escape` to close a project.
+- Use the `MAIN MENU` button or `Escape` to close a project. 
 - Open the gear icon to adjust BGM, SFX, and Low VFX settings.
 - Portrait layouts display a rotate-device prompt rather than rendering the full scene.
 
