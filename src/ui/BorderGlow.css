@@ -1,0 +1,53 @@
+.border-glow-card {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  position: relative;
+  display: inline-grid;
+  isolation: isolate;
+  border-radius: var(--border-radius);
+  background: var(--card-bg);
+}
+
+.border-glow-card::before,
+.border-glow-card::after,
+.border-glow-card__light {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: calc(var(--edge-proximity) / 100 * var(--glow-intensity));
+  transition: opacity 0.4s ease;
+}
+
+.border-glow-card::before {
+  padding: 1px;
+  background:
+    var(--gradient-one),
+    var(--gradient-two),
+    var(--gradient-three),
+    linear-gradient(90deg, #c084fc, #f472b6, #38bdf8);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.border-glow-card::after {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: -1;
+  background: conic-gradient(
+    from var(--cursor-angle),
+    transparent 0 28%, var(--glow-hsl) 40%, transparent 54% 100%
+  );
+  filter: blur(18px);
+}
+
+.border-glow-card__light {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: -1;
+  box-shadow: 0 0 28px var(--glow-hsl);
+}
+
+.border-glow-card__inner {
+  position: relative;
+  z-index: 1;
+}
