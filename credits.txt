@@ -5,6 +5,10 @@ The following media belongs to its respective creators and rights holders.
 It is used here for a small personal portfolio project, is not presented as
 original work, and will be replaced if a rights holder requests removal.
 
+For concerns, corrections, or removal requests, please contact the portfolio
+owner through the contact information provided on the site.
+
+
 
 BACKGROUND MUSIC
 ----------------
@@ -16,6 +20,7 @@ Star Odyssey (Instrumental)
 https://www.youtube.com/watch?v=BV6c06S57tw
 
 
+
 SOUND EFFECTS
 -------------
 
@@ -23,11 +28,13 @@ Genshin Impact sound effects, recorded for interface feedback
 https://genshin.hoyoverse.com/
 
 
+
 HUMANOID REFERENCE MESH
 -----------------------
 
 Male Body SubD Mesh by Julius
 https://opengameart.org/content/male-body-subd-mesh
+
 
 
 PROJECT ARTWORK
@@ -58,5 +65,9 @@ NLP
 https://www.artificial-intelligence.blog/terminology/natural-language-processing
 
 
-For concerns, corrections, or removal requests, please contact the portfolio
-owner through the contact information provided on the site.
+
+FAVICON
+-------
+
+Eclipse Burst
+https://www.vecteezy.com/png/49222685-black-hole-with-a-glowing-halo-of-particles-cut-out-stock
