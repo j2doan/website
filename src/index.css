@@ -2306,6 +2306,13 @@ canvas {
     color: var(--ink);
     white-space: nowrap;
     transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+    flex: 1 1 0;
+    max-width: 100%;
+    gap: 4px;
+    padding: 8px 6px;
+    font-size: clamp(7px, 1.8vw, 10px);
+    letter-spacing: clamp(0.04em, 0.8vw, 0.14em);
+    white-space: nowrap;
   }
 
   .section-stepper__button:hover:not(:disabled),
