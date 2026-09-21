@@ -63,10 +63,8 @@ export function SystemPanel() {
 
   const bgmVolume = useAppStore((s) => s.bgmVolume)
   const sfxVolume = useAppStore((s) => s.sfxVolume)
-  const lowFx = useAppStore((s) => s.lowFx)
   const setBgmVolume = useAppStore((s) => s.setBgmVolume)
   const setSfxVolume = useAppStore((s) => s.setSfxVolume)
-  const setLowFx = useAppStore((s) => s.setLowFx)
 
   const close = () => {
     if (open) {
@@ -129,26 +127,6 @@ export function SystemPanel() {
                 onChange={setSfxVolume}
                 onAudition={() => playSfx(SFX.sfxTest)}
               />
-            </div>
-            <div className="system__section">
-              <div className="system__heading">PERFORMANCE</div>
-              <div className="system__row system__row--switch">
-                <span className="system__row-label">LOW VISUAL FX</span>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={lowFx}
-                  aria-label="Low visual effects"
-                  className={lowFx ? 'switch is-on' : 'switch'}
-                  onClick={() => {
-                    const next = !lowFx
-                    setLowFx(next)
-                    playSfx(next ? SFX.toggleOn : SFX.toggleOff)
-                  }}
-                >
-                  <span className="switch__knob" />
-                </button>
-              </div>
             </div>
           </motion.div>
         )}

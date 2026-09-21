@@ -12,7 +12,6 @@ import { rich } from './RichText'
 export function ProjectPanel() {
   const view = useAppStore((s) => s.view)
   const activeProjectId = useAppStore((s) => s.activeProjectId)
-  const lowFx = useAppStore((s) => s.lowFx)
   const setView = useAppStore((s) => s.setView)
 
   const project = projects.find((p) => p.id === activeProjectId) ?? null
@@ -50,9 +49,9 @@ export function ProjectPanel() {
           key={`panel-${project.id}`}
           className="project-panel"
           initial={false}
-          animate={lowFx ? { opacity: 1 } : { opacity: 1, x: 0 }}
-          exit={lowFx ? { opacity: 0 } : { opacity: 0, x: -24 }}
-          transition={lowFx ? { duration: 0 } : { duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -24 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
           aria-label={project.title}
         >
           <button
@@ -105,11 +104,11 @@ export function ProjectPanel() {
         <motion.div
           key={`art-${project.id}`}
           className="artwork-stage"
-          initial={lowFx ? false : { opacity: 0, y: 24, rotateY: -135 }}
-          animate={lowFx ? { opacity: 1 } : { opacity: 1, y: 0, rotateY: 0 }}
-          exit={lowFx ? { opacity: 0 } : { opacity: 0, y: 24, rotateY: 135 }}
-          transition={lowFx ? { duration: 0 } : { type: 'spring', stiffness: 30, damping: 11, mass: 1 }}
-          style={lowFx ? undefined : { transformPerspective: 1100 }}
+          initial={{ opacity: 0, y: 24, rotateY: -135 }}
+          animate={{ opacity: 1, y: 0, rotateY: 0 }}
+          exit={{ opacity: 0, y: 24, rotateY: 135 }}
+          transition={{ type: 'spring', stiffness: 30, damping: 11, mass: 1 }}
+          style={{ transformPerspective: 1100 }}
           onAnimationComplete={() => setRippleLive(true)}
         >
           <ProjectArtworkCard project={project} live={rippleLive} />

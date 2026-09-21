@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { Project } from '../content/types'
-import { useAppStore } from '../store/useAppStore'
 import { CATEGORY_LABEL } from './meta'
 import { ARTWORK } from '../content/artwork'
 
@@ -43,7 +42,6 @@ export function ProjectArtworkCard({
   compact?: boolean
   live?: boolean
 }) {
-  const lowFx = useAppStore((s) => s.lowFx)
   const art = ARTWORK[project.id]
   const src = art?.src || ''
   const title = art?.title || project.title
@@ -52,7 +50,7 @@ export function ProjectArtworkCard({
 
   // Mouse parallax: nudge the 3D tilt toward the cursor. Decorative only.
   useEffect(() => {
-    if (compact || lowFx) return
+    if (compact) return
     const root = rootRef.current
     if (!root) return
     const onMove = (e: PointerEvent) => {
@@ -65,14 +63,13 @@ export function ProjectArtworkCard({
     }
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => window.removeEventListener('pointermove', onMove)
-  }, [compact, lowFx])
+  }, [compact])
 
   const style = { '--art-accent': project.accent } as CSSProperties
 
   const classes = ['art-card']
   if (compact) classes.push('art-card--compact')
   if (live) classes.push('is-live')
-  if (lowFx) classes.push('is-lowfx')
 
   return (
     <div
@@ -81,7 +78,7 @@ export function ProjectArtworkCard({
       style={style}
       aria-hidden="true"
     >
-      {!compact && !lowFx && <div className="art-card__glow" aria-hidden="true" />}
+      {!compact && <div className="art-card__glow" aria-hidden="true" />}
       <div className="art-card__stack">
         {!compact && (
           <div className="art-card__tilt art-card__tilt--back" aria-hidden="true">
@@ -110,7 +107,7 @@ export function ProjectArtworkCard({
           </div>
         </div>
       </div>
-      {!compact && !lowFx && <div className="art-card__ripple" aria-hidden="true" />}
+      {!compact && <div className="art-card__ripple" aria-hidden="true" />}
     </div>
   )
 }

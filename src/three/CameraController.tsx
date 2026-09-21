@@ -7,6 +7,8 @@ import { sampleSectionPose } from './regions/keyframes'
 import { computeDetailPose } from './TransitionManager'
 import { MotionConfig } from '../config/motion'
 
+const OVERVIEW_FRAME_OFFSET = 2.0
+
 export function CameraRig() {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera
   const view = useAppStore((s) => s.view)
@@ -18,6 +20,10 @@ export function CameraRig() {
   const look = useRef(new THREE.Vector3(0, 1.0, 0))
   const sectionPosition = useRef(new THREE.Vector3())
   const sectionTarget = useRef(new THREE.Vector3())
+  const viewDirection = useRef(new THREE.Vector3())
+  const viewRight = useRef(new THREE.Vector3())
+  const framedPosition = useRef(new THREE.Vector3())
+  const framedTarget = useRef(new THREE.Vector3())
   const fovRef = useRef(45)
   const snapRef = useRef(MotionConfig.cameraLoadSnap)
   const detailPose = useMemo(
@@ -75,6 +81,15 @@ export function CameraRig() {
         pos.x += Math.sin(t * 0.2) * 0.25
         pos.y += Math.cos(t * 0.16) * 0.1
       }
+    }
+
+    if (view !== 'detail') {
+      viewDirection.current.copy(tgt).sub(pos).normalize()
+      viewRight.current.crossVectors(viewDirection.current, camera.up).normalize()
+      framedPosition.current.copy(pos).addScaledVector(viewRight.current, -OVERVIEW_FRAME_OFFSET)
+      framedTarget.current.copy(tgt).addScaledVector(viewRight.current, -OVERVIEW_FRAME_OFFSET)
+      pos = framedPosition.current
+      tgt = framedTarget.current
     }
 
     const k = 1 - Math.exp(-dtClamped * snapRef.current)

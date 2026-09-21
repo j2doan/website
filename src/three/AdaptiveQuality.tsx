@@ -30,15 +30,13 @@ function nearestStep(value: number): number {
 
 export function AdaptiveQuality() {
   const setDpr = useThree((state) => state.setDpr)
-  const cap = useAppStore((state) => (state.lowFx ? 1 : state.quality.dpr))
-  const lowFx = useAppStore((state) => state.lowFx)
+  const cap = useAppStore((state) => state.quality.dpr)
 
   const frameMs = useRef(16)
   const effective = useRef(cap)
   const lastStep = useRef(0)
 
   useFrame((_, dt) => {
-    if (lowFx) return
     frameMs.current += (dt * 1000 - frameMs.current) * EMA_FACTOR
 
     const now = performance.now()

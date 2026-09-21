@@ -27,9 +27,12 @@ uniform float uPixelRatio;
 attribute vec3 aTarget;
 attribute vec3 aSeed;
 attribute float aAlpha;
+attribute float aReveal;
 
 varying float vAlpha;
 varying float vGlow;
+varying float vReveal;
+varying float vPulse;
 
 void main() {
   float p = clamp(uProgress, 0.0, 1.0);
@@ -46,7 +49,7 @@ void main() {
   vec3 formedPos = aTarget;
   formedPos.y = pivotY + (formedPos.y - pivotY) * breathe;
 
-  vec3 pos = mix(chaos, formedPos, formed);
+  vec3 pos = aTarget;
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mvPosition;
@@ -56,6 +59,8 @@ void main() {
 
   vAlpha = aAlpha;
   vGlow = clamp((uPhase - 2.4) * 0.7, 0.0, 1.0);
+  vReveal = smoothstep(aReveal - 0.035, aReveal + 0.035, p);
+  vPulse = 0.5 + 0.5 * sin(uTime * (0.8 + aReveal * 1.4) + aReveal * 31.0);
 }
 `
 
@@ -64,35 +69,39 @@ uniform vec3 uColorA;
 uniform vec3 uColorB;
 varying float vAlpha;
 varying float vGlow;
+varying float vReveal;
+varying float vPulse;
 
 void main() {
   vec2 uv = gl_PointCoord - 0.5;
   float d = length(uv);
   float disc = 1.0 - smoothstep(0.0, 0.5, d);
-  float a = disc * disc * vAlpha * (0.35 + 0.65 * vGlow);
+  float core = disc * disc;
+  float halo = 1.0 - smoothstep(0.24, 0.68, d);
+  float a = (core + halo * 0.12) * vAlpha * vReveal * (0.4 + 1.4 * vPulse) * (0.5 + 0.9 * vGlow);
   if (a < 0.004) discard;
   vec3 col = mix(uColorA, uColorB, vGlow);
-  gl_FragColor = vec4(col * a, a);
+  gl_FragColor = vec4(col * a * 1.15, a);
 }
 `
 
 const INNER_VERT = /* glsl */ `
 uniform float uTime;
+uniform float uProgress;
 uniform float uPhase;
 uniform float uPointSize;
 uniform float uPixelRatio;
 
 attribute float aAlpha;
+attribute float aReveal;
 
 varying float vMix;
 varying float vAlpha;
+varying float vReveal;
+varying float vPulse;
 
 void main() {
   vec3 pos = position;
-  float ang = uTime * 0.07;
-  float c = cos(ang);
-  float s = sin(ang);
-  pos = vec3(pos.x * c - pos.z * s, pos.y, pos.x * s + pos.z * c);
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mvPosition;
@@ -102,6 +111,8 @@ void main() {
 
   vMix = clamp((pos.y + 0.9) / 2.4, 0.0, 1.0);
   vAlpha = aAlpha;
+  vReveal = smoothstep(aReveal - 0.035, aReveal + 0.035, uProgress);
+  vPulse = 0.5 + 0.5 * sin(uTime * (0.8 + aReveal * 1.4) + aReveal * 31.0);
 }
 `
 
@@ -111,28 +122,37 @@ uniform vec3 uColorHigh;
 uniform float uPhase;
 varying float vMix;
 varying float vAlpha;
+varying float vReveal;
+varying float vPulse;
 
 void main() {
   vec2 uv = gl_PointCoord - 0.5;
   float d = length(uv);
   float disc = 1.0 - smoothstep(0.0, 0.5, d);
-  float reveal = smoothstep(2.6, 4.0, uPhase);
-  float a = disc * disc * vAlpha * reveal;
+  float core = disc * disc;
+  float halo = 1.0 - smoothstep(0.24, 0.68, d);
+  float a = (core + halo * 0.12) * vAlpha * vReveal * (0.4 + 1.4 * vPulse) * 1.15;
   if (a < 0.004) discard;
   vec3 col = mix(uColorLow, uColorHigh, vMix);
-  gl_FragColor = vec4(col * a, a);
+  gl_FragColor = vec4(col * a * 1.1, a);
 }
 `
 
 export function createParticleSystem(opts: ParticleSystemOptions): THREE.Points {
   const count = opts.targets.length / 3
   const alphas = new Float32Array(count)
-  for (let i = 0; i < count; i++) alphas[i] = 0.55 + Math.random() * 0.45
+  const reveals = new Float32Array(count)
+  for (let i = 0; i < count; i++) {
+    const hash = Math.sin(i * 12.9898 + 78.233) * 43758.5453
+    alphas[i] = 0.55 + (hash - Math.floor(hash)) * 0.45
+    reveals[i] = hash - Math.floor(hash)
+  }
 
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('aTarget', new THREE.BufferAttribute(opts.targets, 3))
   geometry.setAttribute('aSeed', new THREE.BufferAttribute(opts.chaosSeeds, 3))
   geometry.setAttribute('aAlpha', new THREE.BufferAttribute(alphas, 1))
+  geometry.setAttribute('aReveal', new THREE.BufferAttribute(reveals, 1))
 
   const material = new THREE.ShaderMaterial({
     uniforms: {
@@ -169,15 +189,22 @@ export function createParticleSystem(opts: ParticleSystemOptions): THREE.Points 
 export function createInnerUniverse(opts: InnerUniverseOptions): THREE.Points {
   const count = opts.inside.length / 3
   const alphas = new Float32Array(count)
-  for (let i = 0; i < count; i++) alphas[i] = 0.55 + Math.random() * 0.45
+  const reveals = new Float32Array(count)
+  for (let i = 0; i < count; i++) {
+    const hash = Math.sin(i * 12.9898 + 78.233) * 43758.5453
+    alphas[i] = 0.55 + (hash - Math.floor(hash)) * 0.45
+    reveals[i] = hash - Math.floor(hash)
+  }
 
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('position', new THREE.BufferAttribute(opts.inside, 3))
   geometry.setAttribute('aAlpha', new THREE.BufferAttribute(alphas, 1))
+  geometry.setAttribute('aReveal', new THREE.BufferAttribute(reveals, 1))
 
   const material = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
+      uProgress: { value: 0 },
       uPhase: { value: 0 },
       uPointSize: { value: opts.pointSize },
       uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },

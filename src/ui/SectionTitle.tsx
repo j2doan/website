@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion, useAnimationControls } from 'framer-motion'
+import { useEffect } from 'react'
 import { profile } from '../content/profile'
 import { education } from '../content/education'
 import { publications } from '../content/publications'
@@ -194,33 +195,54 @@ function SectionBody({ section }: { section: SectionId }) {
 export function SectionInfo() {
   const section = useAppStore((s) => s.section)
   const view = useAppStore((s) => s.view)
-  const lowFx = useAppStore((s) => s.lowFx)
+  const backdropControls = useAnimationControls()
+  const infoControls = useAnimationControls()
+
+  useEffect(() => {
+    if (view === 'detail') return
+
+    backdropControls.set({ opacity: 0, rotate: -90 })
+    infoControls.set({ opacity: 0, rotate: -90, clipPath: 'inset(0 100% 0 0 round 4px)' })
+    void backdropControls.start(
+      { opacity: 1, rotate: -4 },
+      { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+    )
+    void infoControls.start(
+      { opacity: 1, rotate: 0, clipPath: 'inset(0 0% 0 0 round 4px)' },
+      { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+    )
+  }, [backdropControls, infoControls, section, view])
 
   if (view === 'detail') return null
   const meta = SECTION_META[section]
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={section}
-        className="section-info"
-        initial={lowFx ? false : { opacity: 0, clipPath: 'inset(0 100% 0 0 round 4px)' }}
-        animate={lowFx ? { opacity: 1 } : { opacity: 1, clipPath: 'inset(0 0% 0 0 round 4px)' }}
-        exit={lowFx ? { opacity: 0 } : { opacity: 0, clipPath: 'inset(0 100% 0 0 round 4px)' }}
-        transition={lowFx ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <span className="section-info__ghost" aria-hidden="true">
-          {meta.index}
-        </span>
-        <div className="section-info__head">
-          <span className="section-info__index">{meta.index}</span>
-          <h2 className="section-info__title">{meta.title}</h2>
-        </div>
-        <div className="section-info__rule" aria-hidden="true" />
-        <div className="section-info__sub">{meta.subtitle}</div>
-        <SectionBody section={section} />
-        <SectionStepper section={section} />
-      </motion.div>
-    </AnimatePresence>
+    <motion.div className="section-info-stage">
+        <motion.div
+          className="section-info__backdrop"
+          aria-hidden="true"
+          initial={false}
+          animate={backdropControls}
+        />
+        <motion.div
+          className="section-info"
+          initial={false}
+          animate={infoControls}
+        >
+          <span className="section-info__ghost" aria-hidden="true">
+            {meta.index}
+          </span>
+          <div className="section-info__content">
+            <div className="section-info__head">
+              <span className="section-info__index">{meta.index}</span>
+              <h2 className="section-info__title">{meta.title}</h2>
+            </div>
+            <div className="section-info__rule" aria-hidden="true" />
+            <div className="section-info__sub">{meta.subtitle}</div>
+            <SectionBody section={section} />
+            <SectionStepper section={section} />
+          </div>
+        </motion.div>
+    </motion.div>
   )
 }

@@ -7,11 +7,10 @@ My cinematic portfolio, built as an immersive 3D world.
 - Persistent Three.js world rendered with React Three Fiber
 - Particle-based humanoid generated from an anatomical OBJ reference mesh
 - Smooth camera movement between seven portfolio sections
-- Orbiting project nodes with reversible particle transitions
+- Orbiting project nodes with animated thinking-orb indicators
 - Project detail panels with artwork cards and responsive placement
-- Cinematic startup screen with High VFX, Low VFX, and audio choices
+- Direct startup into the cinematic emergence sequence
 - Configurable background music and interaction sound effects
-- Low VFX mode for reduced particle, post-processing, and animation cost
 - Keyboard navigation, wheel navigation, focus states, and portrait-mode guidance
 - Data-driven project and portfolio content
 
@@ -52,7 +51,7 @@ src/
 ├── store/       Zustand application state and persisted preferences
 ├── three/       Scene, camera, particle systems, effects, and transitions
 ├── theme/       Shared visual palettes
-└── ui/          Overlay panels, navigation, startup screen, and artwork cards
+└── ui/          Overlay panels, navigation, and artwork cards
 
 public/
 └── favicon.svg
@@ -80,19 +79,17 @@ Most content can be changed without touching the 3D scene.
 
 ## Interaction Model
 
+- Use the nav bar to jump through sections.
 - Scroll or use the arrow keys to move through sections.
-- On mobile, use the `PREVIOUS` and `NEXT` buttons to move through sections.
+- On mobile, use the `PREVIOUS` and `NEXT` buttons at the bottom of each section to move through sections.
 - Use number keys to jump to sections in registry order.
 - Select a project orb or project-list entry to open its detail view.
 - Use the `MAIN MENU` button or `Escape` to close a project. 
-- Open the gear icon to adjust BGM, SFX, and Low VFX settings.
-- Portrait layouts display a rotate-device prompt rather than rendering the full scene.
+- Open the gear icon to adjust BGM and SFX settings.
 
 ## Performance
 
-The application selects a quality tier using device capabilities and reduced-motion preferences. Different tiers adjust adjust particle counts, renderer pixel ratio, ocean density, and post-processing.
-
-Low VFX can also be selected manually. It preserves the core experience while reducing decorative particle systems, burst particles, bloom, card glow, ripple effects, and transition animation.
+The application selects a quality tier using device capabilities and reduced-motion preferences. Different tiers adjust particle counts, renderer pixel ratio, and post-processing.
 
 ## Project Artwork
 
