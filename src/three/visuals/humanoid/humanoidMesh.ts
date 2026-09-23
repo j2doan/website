@@ -1,6 +1,13 @@
-import { HUMANOID_SCALE } from './humanoid'
-import type { HumanoidData } from './humanoid'
 import malebodyObj from '../../../assets/malebody.obj?raw'
+
+interface HumanoidData {
+  body: Float32Array
+  shell: Float32Array
+  head: Float32Array
+  inside: Float32Array
+}
+
+const HUMANOID_SCALE = 3.0
 
 // OBJ-derived humanoid.
 //
@@ -13,11 +20,11 @@ import malebodyObj from '../../../assets/malebody.obj?raw'
 //   1. surface          - exact surface points, crisp external silhouette
 //   2. shell            - surface points nudged outward, gives the body volume
 //   3. inside           - surface points pushed inward, limited depth
-// The head region is masked off the skull so head tracking can rotate it.
+// The head region is masked off the skull so it remains a distinct particle layer.
 
 // Target bounding box in UNSCALED units - matches the procedural figure
 // (humanoid.ts: feet near -0.97, crown near 1.36) so HUMANOID_SCALE and all
-// camera framing stay identical to the previous figure.
+// camera framing remains consistent with the procedural figure.
 const FEET_Y = -0.97
 const CROWN_Y = 1.36
 
@@ -30,7 +37,7 @@ const HEAD_MIN_Y = 1.07
 const HEAD_MAX_ABS_X = 0.18
 const HEAD_MAX_ABS_Z = 0.3
 
-// Shell halo: surface points pushed slightly outward to thicken the silhouette.
+// Shell offset: surface points pushed slightly outward to thicken the silhouette.
 const SHELL_OFFSET_MIN = 0.004
 const SHELL_OFFSET_MAX = 0.012
 

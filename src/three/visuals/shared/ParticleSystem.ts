@@ -77,11 +77,10 @@ void main() {
   float d = length(uv);
   float disc = 1.0 - smoothstep(0.0, 0.5, d);
   float core = disc * disc;
-  float halo = 1.0 - smoothstep(0.24, 0.68, d);
-  float a = (core + halo * 0.12) * vAlpha * vReveal * (0.4 + 1.4 * vPulse) * (0.5 + 0.9 * vGlow);
+  float a = core * vAlpha * vReveal * (0.4 + 1.4 * vPulse) * (0.5 + 0.9 * vGlow);
   if (a < 0.004) discard;
   vec3 col = mix(uColorA, uColorB, vGlow);
-  gl_FragColor = vec4(col * a * 1.15, a);
+  gl_FragColor = vec4(col * a, a);
 }
 `
 
@@ -130,11 +129,10 @@ void main() {
   float d = length(uv);
   float disc = 1.0 - smoothstep(0.0, 0.5, d);
   float core = disc * disc;
-  float halo = 1.0 - smoothstep(0.24, 0.68, d);
-  float a = (core + halo * 0.12) * vAlpha * vReveal * (0.4 + 1.4 * vPulse) * 1.15;
+  float a = core * vAlpha * vReveal * (0.4 + 1.4 * vPulse) * 1.15;
   if (a < 0.004) discard;
   vec3 col = mix(uColorLow, uColorHigh, vMix);
-  gl_FragColor = vec4(col * a * 1.1, a);
+  gl_FragColor = vec4(col * a, a);
 }
 `
 

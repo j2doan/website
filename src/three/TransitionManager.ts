@@ -26,7 +26,7 @@ export function transitionToSection(index: number): void {
 /**
  * Shared project-opening path. Project orbs and the Projects panel list both
  * route through here so their behavior stays identical —
- * transition lock, select sound, camera focus, burst, artwork card, panel.
+ * transition lock, selection sound, camera focus, artwork card, and panel.
  */
 export function openProject(projectId: string): void {
   if (!acquireTransitionLock()) return

@@ -4,6 +4,7 @@ import { useAppStore } from '../store/useAppStore'
 import { CenterStage } from './regions/EmergenceRegion'
 import { OrbitGallery } from './regions/GalleryRegion'
 import { GridWave } from './systems/GridWave'
+import { GridMatrix } from './systems/GridMatrix'
 import { KineticType } from './systems/KineticType'
 import { LightingState } from './LightingState'
 import { CameraRig } from './CameraController'
@@ -38,6 +39,7 @@ export function Scene({ onReady }: { onReady: () => void }) {
       <KineticType />
       <CenterStage />
       <OrbitGallery />
+      <GridMatrix />
       <GridWave />
       <LightingState />
       <CameraRig />

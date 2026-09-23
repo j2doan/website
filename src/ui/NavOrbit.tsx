@@ -14,7 +14,6 @@ export function NavOrbit() {
 
   return (
     <nav className="nav-orbit" aria-label="Sections">
-      <span className="nav-orbit__rail" aria-hidden="true" />
       <div className="nav-orbit__list">
         {SECTION_ORDER.map((s, i) => (
           <button

@@ -9,7 +9,7 @@ export const ORB_PALETTE = [
   '#ffffff',
 ]
 
-export const BRIGHT_HUMANOID_COLORS: {
+export type HumanoidColors = {
   bodyA: [number, number, number]
   bodyB: [number, number, number]
   headA: [number, number, number]
@@ -18,15 +18,19 @@ export const BRIGHT_HUMANOID_COLORS: {
   shellB: [number, number, number]
   innerLow: [number, number, number]
   innerHigh: [number, number, number]
-} = {
-  bodyA: [0.1, 0.1, 0.1],
-  bodyB: [0.3, 0.3, 0.3],
-  headA: [0.12, 0.12, 0.12],
-  headB: [0.34, 0.34, 0.34],
-  shellA: [0.14, 0.14, 0.14],
-  shellB: [0.38, 0.38, 0.38],
-  innerLow: [0.05, 0.05, 0.05],
-  innerHigh: [0.22, 0.22, 0.22],
+}
+
+export const BRIGHT_HUMANOID_COLORS: HumanoidColors = {
+  // Fog palette: soft neutral silver with enough contrast to remain visible
+  // against the black world without competing with the white project orbs.
+  bodyA: [0.48, 0.52, 0.53],
+  bodyB: [0.68, 0.72, 0.73],
+  headA: [0.53, 0.57, 0.58],
+  headB: [0.74, 0.78, 0.79],
+  shellA: [0.64, 0.68, 0.69],
+  shellB: [0.84, 0.87, 0.88],
+  innerLow: [0.25, 0.28, 0.29],
+  innerHigh: [0.44, 0.48, 0.49],
 }
 
 export const CURRENT_HUMANOID_COLORS = BRIGHT_HUMANOID_COLORS

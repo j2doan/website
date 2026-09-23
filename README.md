@@ -8,6 +8,9 @@ My cinematic portfolio, built as an immersive 3D world.
 - Particle-based humanoid generated from an anatomical OBJ reference mesh
 - Smooth camera movement between seven portfolio sections
 - Orbiting project nodes with animated thinking-orb indicators
+- Independently configurable Thinking Orb animation states for all eight projects
+- Camera-relative project-orb depth fading
+- Sparse rotated 3D grid matrix with central stage exclusion
 - Project detail panels with artwork cards and responsive placement
 - Direct startup into the cinematic emergence sequence
 - Configurable background music and interaction sound effects
@@ -43,7 +46,7 @@ recommended, and portrait devices are shown a rotate-device prompt.
 ```text
 src/
 ├── audio/       Audio configuration, manager, hooks, and source files
-├── config/      Section and motion configuration
+├── config/      Section, motion, and project-orb configuration
 ├── content/     Portfolio content, project data, and artwork
 ├── hooks/       Navigation, startup, and responsive behavior hooks
 ├── loader/      Startup asset preloading
@@ -54,7 +57,7 @@ src/
 └── ui/          Overlay panels, navigation, and artwork cards
 
 public/
-└── favicon.svg
+└── eclipse_burst.png
 
 archive/         Retired visual experiments and development utilities
 ```
@@ -75,6 +78,7 @@ Most content can be changed without touching the 3D scene.
 | Section names, order, subtitles, and kinetic words | `src/config/sections.ts` |
 | Camera poses and section lighting | `src/config/sections.ts` |
 | Camera and transition timing | `src/config/motion.ts` |
+| Project Thinking Orb states | `src/config/orb.ts` |
 | Shared colors | `src/theme/palette.ts` |
 
 ## Interaction Model
@@ -86,6 +90,8 @@ Most content can be changed without touching the 3D scene.
 - Select a project orb or project-list entry to open its detail view.
 - Use the `MAIN MENU` button or `Escape` to close a project. 
 - Open the gear icon to adjust BGM and SFX settings.
+
+Project orb animations can be changed independently in `src/config/orb.ts` using the eight project-specific state variables. Supported states include `working`, `searching`, `solving`, `listening`, `connecting`, `weaving`, `composing`, `breathing`, and `shaping`.
 
 ## Performance
 

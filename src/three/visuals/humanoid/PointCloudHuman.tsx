@@ -3,14 +3,8 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useAppStore, type LoadPhase } from '../../../store/useAppStore'
 import { createParticleSystem, createInnerUniverse } from '../shared/ParticleSystem'
-import { buildHumanoidData } from './humanoid'
 import { buildHumanoidMeshData } from './humanoidMesh'
 import { CURRENT_HUMANOID_COLORS } from '../../../theme/palette'
-
-// Select the anatomical OBJ pipeline or the procedural fallback.
-//  true  -> OBJ-derived humanoid (malebody.obj reference)
-//  false -> Procedural primitive humanoid (humanoid.ts)
-const USE_OBJ_HUMANOID = true
 
 const PHASE_VALUE: Record<LoadPhase, number> = {
   void: 0,
@@ -28,9 +22,7 @@ export function PointCloudHuman() {
   const innerParticleCount = quality.innerParticleCount
 
   const { body, shell, head, inner } = useMemo(() => {
-    const data = USE_OBJ_HUMANOID
-      ? buildHumanoidMeshData(particleCount, innerParticleCount)
-      : buildHumanoidData(particleCount, innerParticleCount)
+    const data = buildHumanoidMeshData(particleCount, innerParticleCount)
     const seedsFor = (targets: Float32Array) => {
       const seeds = new Float32Array(targets.length)
       for (let i = 0; i < seeds.length; i++) {
@@ -81,6 +73,11 @@ export function PointCloudHuman() {
     const t = clock.elapsedTime
     const targetProgress = loadPhase === 'void' || loadPhase === 'chaos' ? 0 : 1
     progressRef.current += (targetProgress - progressRef.current) * 0.018
+
+    if (groupRef.current) {
+      const breath = 1 + Math.sin(t * 1.6) * 0.006
+      groupRef.current.scale.setScalar(breath)
+    }
 
     if (bodyRef.current) {
       bodyRef.current.rotation.z = 0

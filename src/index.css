@@ -12,7 +12,7 @@
   --font-ui: 'Segoe UI Variable Display', 'Segoe UI', -apple-system, 'Helvetica Neue', Arial,
     sans-serif;
   --font-mono: 'Cascadia Mono', Consolas, 'SF Mono', Menlo, monospace;
-  /* Right-edge space reserved for the nav rail (responsive, see breakpoints). */
+  /* Right-edge space reserved for the section navigation controls. */
   --nav-reserve: 248px;
 }
 
@@ -617,15 +617,8 @@ canvas {
   display: flex;
   align-items: stretch;
   gap: 0;
-  pointer-events: auto;
+  pointer-events: none;
   z-index: 30;
-}
-
-.nav-orbit__rail {
-  position: relative;
-  width: 1px;
-  margin: 12px 0;
-  background: linear-gradient(180deg, transparent, var(--line) 22%, var(--line) 78%, transparent);
 }
 
 .nav-orbit__list {
@@ -636,7 +629,8 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: 3px;
-  /* Nav rail keeps its scrollbar on the RIGHT (outside the section boxes). */
+  pointer-events: auto;
+  /* Navigation list keeps its scrollbar on the RIGHT (outside the section boxes). */
   padding-right: 12px;
   scrollbar-width: thin;
   scrollbar-color: rgba(92, 200, 255, 0.35) transparent;
@@ -2254,7 +2248,7 @@ canvas {
     min-width: 22px;
   }
 
-  /* Keep the section panel centered while leaving room for the nav rail. */
+  /* Keep the section panel centered while leaving room for navigation controls. */
   .section-info {
     top: 7.5%;
     bottom: 7.5%;
@@ -2346,8 +2340,8 @@ canvas {
   }
 }
 
-/* Short landscape viewports (e.g. 844×390, 1024×768): anchor the section panel
-   below the HUD so it never collides with the centered nav rail. */
+  /* Short landscape viewports (e.g. 844×390, 1024×768): anchor the section panel
+     below the HUD so it never collides with the centered navigation controls. */
 @media (max-height: 560px) and (min-width: 821px) {
   .section-info {
     top: 7.5%;

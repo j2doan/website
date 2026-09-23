@@ -9,6 +9,7 @@ import { orbitState, updateOrbits } from '../regions/positions'
 import { AudioManager } from '../../audio/AudioManager'
 import { SFX } from '../../audio/AudioConfig'
 import { openProject } from '../TransitionManager'
+import { PROJECT_ORB_STATES } from '../../config/orb'
 
 export function ProjectOrbits() {
   const activeProjectId = useAppStore((s) => s.activeProjectId)
@@ -22,15 +23,20 @@ export function ProjectOrbits() {
   const selectableRef = useRef(false)
 
   const groups = useRef<(THREE.Group | null)[]>([])
+  const visuals = useRef<(HTMLDivElement | null)[]>([])
+  const distances = useRef(new Float32Array(projects.length))
   const activeIndex = useMemo(
     () => (activeProjectId ? Math.max(0, (projects.find((p) => p.id === activeProjectId)?.position ?? 1) - 1) : -1),
     [activeProjectId],
   )
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, camera }) => {
     if (view !== 'detail') {
       updateOrbits(clock.elapsedTime, projects.length)
     }
+
+    let nearest = Infinity
+    let farthest = 0
     for (let i = 0; i < projects.length; i++) {
       const group = groups.current[i]
       if (group && view !== 'detail') {
@@ -42,6 +48,22 @@ export function ProjectOrbits() {
       }
 
       if (group) group.scale.setScalar(1)
+      if (group) {
+        const distance = camera.position.distanceTo(group.position)
+        distances.current[i] = distance
+        if (distance < nearest) nearest = distance
+        if (distance > farthest) farthest = distance
+      }
+    }
+
+    if (nearest === Infinity) return
+
+    const range = Math.max(0.001, farthest - nearest)
+    for (let i = 0; i < projects.length; i++) {
+      const visual = visuals.current[i]
+      if (!visual) continue
+      const relativeDistance = (distances.current[i] - nearest) / range
+      visual.style.opacity = String(1 - relativeDistance * 0.35)
     }
   })
 
@@ -66,9 +88,14 @@ export function ProjectOrbits() {
             }`}
             style={{ pointerEvents: 'none' }}
           >
-            <div className="project-orb__visual">
+            <div
+              ref={(element) => {
+                visuals.current[i] = element
+              }}
+              className="project-orb__visual"
+            >
               <ThinkingOrb
-                state="connecting"
+                state={PROJECT_ORB_STATES[i]}
                 size={64}
                 theme="dark"
                 paused={false}
