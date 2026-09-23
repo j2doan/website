@@ -60,7 +60,8 @@ export function GridMatrix() {
     const material = new THREE.LineBasicMaterial({
       color: '#687078',
       transparent: true,
-      opacity: 0.09,
+      opacity: 0.055,
+      fog: false,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     })
